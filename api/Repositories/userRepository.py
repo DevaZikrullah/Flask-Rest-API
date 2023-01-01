@@ -1,5 +1,6 @@
-from api import marshal_with,Blueprint,db,request,jsonify
+from api import marshal_with,Blueprint,db,request,jsonify,generate_password_hash,check_password_hash,jwt,app
 from api.models import User,userSerialized
+from datetime import datetime, timedelta
 
 userRoute = Blueprint('user_route',__name__)
 
@@ -15,7 +16,11 @@ class UserRepository:
     @marshal_with(userSerialized)
     def post():
         data = request.json
-        user  = User(name = data['name'],password = data['password'],point = data['point'])
+        user  = User(
+            name = data['name'],
+            password = generate_password_hash(data['password']),
+            point = data['point']
+            )
         check = User.query.filter_by(name=data['name']).first()
         if not check:
             db.session.add(user)
@@ -31,17 +36,26 @@ class UserRepository:
 
         if not user:
             return jsonify(
-                message = "not found id",
+                message = "not found name",
                 status = 404
             )
 
-        if user.password != data['password']:
+        if check_password_hash(user.password,data['password']):
+            token = jwt.encode({
+            'id': user.id,
+            'exp' : datetime.utcnow() + timedelta(minutes = 30)
+            }, app.config['SECRET_KEY'],algorithm="HS256")
+
             return jsonify(
-                message = "wrong password",
-                status = 401
+                # token = jwt.decode(token,app.config['SECRET_KEY'], algorithms="HS256"),
+                bearer_token= token,
+                message = "Login Succsesfull",
+                status = 201
             )
 
         return jsonify(
-            message = "Login Succsesfull",
-            status = 201
+            message = "wrong password",
+            status = 401
         )
+
+        # def info_user():
