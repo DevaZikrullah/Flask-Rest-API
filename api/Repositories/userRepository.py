@@ -2,16 +2,9 @@ from api import (marshal_with,
                     Blueprint,
                     db,
                     request,
-                    jsonify,
-                    generate_password_hash,
-                    check_password_hash,
-                    app,
-                    jwt_required,
-                    create_access_token,
-                    get_jwt_identity
+                    generate_password_hash
                     )
 from api.models import User,userSerialized
-from datetime import datetime, timedelta
 
 userRoute = Blueprint('user_route',__name__)
 

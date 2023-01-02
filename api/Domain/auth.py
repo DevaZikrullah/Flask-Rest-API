@@ -1,11 +1,7 @@
-from api import (marshal_with,
-                    Blueprint,
-                    db,
+from api import (Blueprint,
                     request,
                     jsonify,
-                    generate_password_hash,
                     check_password_hash,
-                    app,
                     jwt_required,
                     create_access_token,
                     get_jwt_identity
