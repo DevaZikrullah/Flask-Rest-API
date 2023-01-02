@@ -33,7 +33,6 @@ class Auth:
                 message = "Login Succsesfull",
                 status = 201
             )
-
         return jsonify(
             message = "wrong password",
             status = 401
