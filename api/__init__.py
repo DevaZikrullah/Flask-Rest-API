@@ -1,4 +1,4 @@
-from flask import Flask,request,Blueprint,jsonify
+from flask import Flask,request,Blueprint,jsonify,render_template
 from flask_restful import Api,marshal_with,fields
 from flask_sqlalchemy import SQLAlchemy
 from flask_migrate import Migrate
@@ -12,7 +12,6 @@ app.config['SQLALCHEMY_DATABASE_URI'] = 'mysql://deva:deva@localhost/flask'
 db = SQLAlchemy(app)
 migrate = Migrate(app, db)
 app.config['SECRET_KEY'] = 'your secret key'
-
 jwt = JWTManager(app)
 
 

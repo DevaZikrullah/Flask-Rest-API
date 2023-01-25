@@ -31,6 +31,7 @@ class User(db.Model):
     name = db.Column(db.String(20), nullable = False)
     password = db.Column(db.String(225),nullable = False)
     point = db.Column(db.Integer, nullable = False)
+    activated = db.Column(db.String(20))
 
     def __init__(self,name,password,point):
         self.name = name
