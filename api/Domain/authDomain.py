@@ -1,5 +1,6 @@
 from api import (Blueprint,
                     request,
+                    render_template,
                     jsonify,
                     check_password_hash,
                     jwt_required,
@@ -7,16 +8,17 @@ from api import (Blueprint,
                     get_jwt_identity
                     )
 from api.models import User
+from api.Repositories.userRepository import *
 
 
-auth = Blueprint('auth_route',__name__)
+authRoute = Blueprint('auth_route',__name__)
 
 
 class Auth:
-    @auth.route('/login',methods =['POST'])
+    @authRoute.route('/login',methods =['POST'])
     def login():
         data = request.json
-        user = User.query.filter_by(name=data['name']).first()
+        user = UserRepository.getByName(data['name'])
 
         if not user:
             return jsonify(
@@ -26,7 +28,6 @@ class Auth:
 
         if check_password_hash(user.password,data['password']):
             token = create_access_token(identity=user.name)
-
             return jsonify(
                 # token = jwt.decode(token,app.config['SECRET_KEY'], algorithms="HS256"),
                 bearer_token= token,
@@ -39,10 +40,10 @@ class Auth:
             status = 401
         )
 
-    @auth.route('/info',methods =['GET'])
+    @authRoute.route('/info',methods =['GET'])
     @jwt_required()
     def info_my_acc():
-        user = User.query.filter_by(name = get_jwt_identity()).first()
+        user = UserRepository.getByName(get_jwt_identity())
         return jsonify(
             name = user.name,
             password = user.password,

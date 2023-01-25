@@ -12,13 +12,13 @@ class ItemRepository:
         return item
 
 
-    @itemRoute.route('/item',methods =['POST'])
-    @marshal_with(itemSerialized)
-    def post():
-        data = request.json
-        # item  = Item(id = data['id'],name = data['name'])
-        item  = Item(name = data['name'])
+    def post(name):
+        item  = Item(name = name)
         db.session.add(item)
         db.session.commit()
         return Item.query.all()
+
+    def getByName(name):
+        item = Item.query.filter_by(name=name).first()
+        return item
     

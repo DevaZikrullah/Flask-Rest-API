@@ -1,0 +1,15 @@
+<html>
+    <head>
+        <title>{{ title }}</title>
+    </head>
+    <body>
+        <h1>Hello {{ username }}</h1>
+        <form action="{{ url_for('register') }}" method="post">
+            <div class="msg">{{ msg }}</div>
+              <input name="username" type="text" placeholder="Enter Your Username" class="textbox"/></br></br>
+              <input name="password" type="password" placeholder="Enter Your Password" class="textbox"/></br></br>
+              <input name="point" type="number" placeholder="Enter your point" class="number"/></br></br>
+              <input type="submit" class="btn" value="Sign Up"></br>
+        </form>
+    </body>
+</html>

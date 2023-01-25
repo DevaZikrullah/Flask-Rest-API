@@ -10,25 +10,27 @@ userRoute = Blueprint('user_route',__name__)
 
 class UserRepository:
 
-    @userRoute.route('/users',methods =['GET'])
-    @marshal_with(userSerialized)
+    # @userRoute.route('/users',methods =['GET'])
+    # @marshal_with(userSerialized)
     def get():
         users = User.query.all()
         return users    
 
-    @userRoute.route('/users',methods =['POST'])
-    @marshal_with(userSerialized)
-    def post():
-        data = request.json
+    def post(data):
         user  = User(
-            name = data['name'],
+            name = data['username'],
             password = generate_password_hash(data['password']),
             point = data['point']
             )
-        check = User.query.filter_by(name=data['name']).first()
+        
+        check = UserRepository.getByName(data['username'])
         if not check:
             db.session.add(user)
             db.session.commit()
             return User.query.all()
         else:
-            return 404
+            raise Exception('data sudah ada')
+        
+    def getByName(username):
+        user =  User.query.filter_by(name=username).first()
+        return user
