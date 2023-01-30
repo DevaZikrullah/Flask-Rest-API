@@ -14,7 +14,7 @@ from api.Repositories.userRepository import *
 authRoute = Blueprint('auth_route',__name__)
 
 
-class Auth:
+class AuthDomain:
     @authRoute.route('/login',methods =['POST'])
     def login():
         data = request.json
@@ -40,12 +40,22 @@ class Auth:
             status = 401
         )
 
-    @authRoute.route('/info',methods =['GET'])
-    @jwt_required()
-    def info_my_acc():
-        user = UserRepository.getByName(get_jwt_identity())
+    # @authRoute.route('/info',methods =['GET'])
+    # @jwt_required()
+    def info_my_acc(username):
+        user = UserRepository.getByName(username)
+        if not user:
+            raise Exception('Username Not Found')
+            
         return jsonify(
             name = user.name,
             password = user.password,
             point = user.point
         )
+    
+    def createAccount(username,password,point):
+        if not UserRepository.getByName(username):
+            raise Exception('username already taken')
+        else:
+            UserRepository.post(username,password,point)
+            return 'succes create account'
