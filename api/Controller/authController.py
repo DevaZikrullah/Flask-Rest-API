@@ -36,3 +36,21 @@ class Authentication:
                 status=500,
                 message = 'Failed load info account'
             )
+    
+    @authentication.route('/login', methods =['POST'])
+    def login():
+        username = request.json['username']
+        password = request.json['password']
+        try:
+            AuthDomain.login(username,password)
+            token = create_access_token(identity=username)
+            return jsonify(
+            bearer_token= token,
+            status = 200,
+            message = 'Succses load info account',
+            )
+        except:
+            return jsonify(
+                status=500,
+                message = 'Failed load info account'
+            )
